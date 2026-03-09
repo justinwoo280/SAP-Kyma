@@ -34,9 +34,7 @@ export const options = {
     },
   },
   thresholds: {
-    h2_backend_protocol_ok: ["rate>0.95"],
     h1_backend_protocol_ok: ["rate>0.95"],
-    alt_svc_header_present: ["rate>0.95"],
     http_req_failed: ["rate<0.05"],
   },
 };

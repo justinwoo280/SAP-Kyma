@@ -59,8 +59,14 @@ func infoHandler(w http.ResponseWriter, r *http.Request) {
 		ServerVersion:  "echo-server/1.0",
 	}
 
+	istioProto := r.Header.Get("X-Forwarded-Proto")
+	if istioProto == "" {
+		istioProto = r.Proto
+	}
+
 	w.Header().Set("Content-Type", "application/json")
 	w.Header().Set("X-Backend-Protocol", r.Proto)
+	w.Header().Set("X-Forwarded-Protocol", istioProto)
 	w.Header().Set("X-Request-Count", strconv.FormatInt(atomic.LoadInt64(&requestCounter), 10))
 	json.NewEncoder(w).Encode(resp)
 }
