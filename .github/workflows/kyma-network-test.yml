@@ -119,15 +119,18 @@ jobs:
         run: |
           mkdir -p $HOME/.kube
           touch $HOME/.kube/config && chmod 600 $HOME/.kube/config
+          echo "${K8S_CA_DATA}" | base64 -d > /tmp/ca.crt
           kubectl config set-cluster kyma \
             --server="${K8S_SERVER}" \
-            --certificate-authority-data="${K8S_CA_DATA}"
+            --certificate-authority=/tmp/ca.crt \
+            --embed-certs=true
           kubectl config set-credentials ci-runner \
             --token="${K8S_SA_TOKEN}"
           kubectl config set-context kyma \
             --cluster=kyma \
             --user=ci-runner
           kubectl config use-context kyma
+          rm -f /tmp/ca.crt
 
       - name: Verify cluster connectivity
         run: |
@@ -257,15 +260,18 @@ jobs:
         run: |
           mkdir -p $HOME/.kube
           touch $HOME/.kube/config && chmod 600 $HOME/.kube/config
+          echo "${K8S_CA_DATA}" | base64 -d > /tmp/ca.crt
           kubectl config set-cluster kyma \
             --server="${K8S_SERVER}" \
-            --certificate-authority-data="${K8S_CA_DATA}"
+            --certificate-authority=/tmp/ca.crt \
+            --embed-certs=true
           kubectl config set-credentials ci-runner \
             --token="${K8S_SA_TOKEN}"
           kubectl config set-context kyma \
             --cluster=kyma \
             --user=ci-runner
           kubectl config use-context kyma
+          rm -f /tmp/ca.crt
 
       - name: Wait for endpoint to be reachable
         run: |
@@ -458,15 +464,18 @@ jobs:
         run: |
           mkdir -p $HOME/.kube
           touch $HOME/.kube/config && chmod 600 $HOME/.kube/config
+          echo "${K8S_CA_DATA}" | base64 -d > /tmp/ca.crt
           kubectl config set-cluster kyma \
             --server="${K8S_SERVER}" \
-            --certificate-authority-data="${K8S_CA_DATA}"
+            --certificate-authority=/tmp/ca.crt \
+            --embed-certs=true
           kubectl config set-credentials ci-runner \
             --token="${K8S_SA_TOKEN}"
           kubectl config set-context kyma \
             --cluster=kyma \
             --user=ci-runner
           kubectl config use-context kyma
+          rm -f /tmp/ca.crt
 
       - name: Delete all test resources
         run: |
