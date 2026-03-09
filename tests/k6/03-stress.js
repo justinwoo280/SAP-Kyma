@@ -53,18 +53,21 @@ export default function () {
 }
 
 export function handleSummary(data) {
+  var m = data.metrics;
+  function mv(name, key) { return m[name] && m[name].values ? m[name].values[key] : undefined; }
+
   const summary = {
     timestamp: new Date().toISOString(),
     test: "stress-ramp",
     base_url: BASE_URL,
     metrics: {
-      error_rate: data.metrics.stress_error_rate?.values?.rate,
-      p50_ms: data.metrics.stress_latency_ms?.values?.["p(50)"],
-      p95_ms: data.metrics.stress_latency_ms?.values?.["p(95)"],
-      p99_ms: data.metrics.stress_latency_ms?.values?.["p(99)"],
-      max_ms: data.metrics.stress_latency_ms?.values?.max,
-      total_requests: data.metrics.http_reqs?.values?.count,
-      rps: data.metrics.http_reqs?.values?.rate,
+      error_rate: mv("stress_error_rate", "rate"),
+      p50_ms: mv("stress_latency_ms", "p(50)"),
+      p95_ms: mv("stress_latency_ms", "p(95)"),
+      p99_ms: mv("stress_latency_ms", "p(99)"),
+      max_ms: mv("stress_latency_ms", "max"),
+      total_requests: mv("http_reqs", "count"),
+      rps: mv("http_reqs", "rate"),
     },
   };
 

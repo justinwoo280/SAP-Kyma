@@ -108,20 +108,23 @@ export default function () {
 }
 
 export function handleSummary(data) {
+  var m = data.metrics;
+  function mv(name, key) { return m[name] && m[name].values ? m[name].values[key] : undefined; }
+
   const summary = {
     timestamp: new Date().toISOString(),
     test: "protocol-negotiation",
     base_url: BASE_URL,
-    thresholds_passed: Object.entries(data.metrics)
-      .filter(([, m]) => m.thresholds)
-      .every(([, m]) => Object.values(m.thresholds).every((t) => !t.ok === false)),
+    thresholds_passed: Object.entries(m)
+      .filter(([, v]) => v.thresholds)
+      .every(([, v]) => Object.values(v.thresholds).every((t) => !t.ok === false)),
     metrics: {
-      h2_backend_ok_rate: data.metrics.h2_backend_protocol_ok?.values?.rate,
-      h1_backend_ok_rate: data.metrics.h1_backend_protocol_ok?.values?.rate,
-      alt_svc_rate: data.metrics.alt_svc_header_present?.values?.rate,
-      h2_p95_ms: data.metrics.h2_request_duration_ms?.values?.["p(95)"],
-      h1_p95_ms: data.metrics.h1_request_duration_ms?.values?.["p(95)"],
-      http_req_failed_rate: data.metrics.http_req_failed?.values?.rate,
+      h2_backend_ok_rate: mv("h2_backend_protocol_ok", "rate"),
+      h1_backend_ok_rate: mv("h1_backend_protocol_ok", "rate"),
+      alt_svc_rate: mv("alt_svc_header_present", "rate"),
+      h2_p95_ms: mv("h2_request_duration_ms", "p(95)"),
+      h1_p95_ms: mv("h1_request_duration_ms", "p(95)"),
+      http_req_failed_rate: mv("http_req_failed", "rate"),
     },
   };
 

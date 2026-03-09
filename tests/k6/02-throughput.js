@@ -111,11 +111,12 @@ export function testH1Throughput() {
 }
 
 export function handleSummary(data) {
-  const durationSeconds =
-    (parseInt(DURATION, 10) || 120);
+  const durationSeconds = (parseInt(DURATION, 10) || 120);
+  var m = data.metrics;
+  function mv(name, key) { return m[name] && m[name].values ? m[name].values[key] : undefined; }
 
-  const h2Bytes = data.metrics.h2_bytes_received?.values?.count || 0;
-  const h1Bytes = data.metrics.h1_bytes_received?.values?.count || 0;
+  const h2Bytes = mv("h2_bytes_received", "count") || 0;
+  const h1Bytes = mv("h1_bytes_received", "count") || 0;
 
   const summary = {
     timestamp: new Date().toISOString(),
@@ -128,21 +129,21 @@ export function handleSummary(data) {
       h2: {
         total_bytes: h2Bytes,
         throughput_mbps: ((h2Bytes / 1024 / 1024) / durationSeconds).toFixed(2),
-        p50_ms: data.metrics.h2_throughput_duration_ms?.values?.["p(50)"],
-        p95_ms: data.metrics.h2_throughput_duration_ms?.values?.["p(95)"],
-        p99_ms: data.metrics.h2_throughput_duration_ms?.values?.["p(99)"],
-        error_rate: data.metrics.h2_error_rate?.values?.rate,
+        p50_ms: mv("h2_throughput_duration_ms", "p(50)"),
+        p95_ms: mv("h2_throughput_duration_ms", "p(95)"),
+        p99_ms: mv("h2_throughput_duration_ms", "p(99)"),
+        error_rate: mv("h2_error_rate", "rate"),
       },
       h1: {
         total_bytes: h1Bytes,
         throughput_mbps: ((h1Bytes / 1024 / 1024) / durationSeconds).toFixed(2),
-        p50_ms: data.metrics.h1_throughput_duration_ms?.values?.["p(50)"],
-        p95_ms: data.metrics.h1_throughput_duration_ms?.values?.["p(95)"],
-        p99_ms: data.metrics.h1_throughput_duration_ms?.values?.["p(99)"],
-        error_rate: data.metrics.h1_error_rate?.values?.rate,
+        p50_ms: mv("h1_throughput_duration_ms", "p(50)"),
+        p95_ms: mv("h1_throughput_duration_ms", "p(95)"),
+        p99_ms: mv("h1_throughput_duration_ms", "p(99)"),
+        error_rate: mv("h1_error_rate", "rate"),
       },
     },
-    http_req_failed_rate: data.metrics.http_req_failed?.values?.rate,
+    http_req_failed_rate: mv("http_req_failed", "rate"),
   };
 
   return {
