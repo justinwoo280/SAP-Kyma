@@ -39,10 +39,26 @@ jobs:
 
       - name: kubectl dry-run (standard K8s resources)
         run: |
-          kubectl config set-cluster fake --server=https://fake:6443
-          kubectl config set-context fake --cluster=fake
-          kubectl config use-context fake
-          kubectl apply --dry-run=client --validate=false \
+          cat > /tmp/fake-kubeconfig.yaml << 'EOF'
+          apiVersion: v1
+          kind: Config
+          clusters:
+          - cluster:
+              server: https://fake:6443
+              insecure-skip-tls-verify: true
+            name: fake
+          contexts:
+          - context:
+              cluster: fake
+              user: fake
+            name: fake
+          current-context: fake
+          users:
+          - name: fake
+            user:
+              token: fake
+          EOF
+          kubectl --kubeconfig=/tmp/fake-kubeconfig.yaml apply --dry-run=client --validate=false \
             -f k8s/00-namespace.yaml \
             -f k8s/backend/03-ewp-server.yaml
 

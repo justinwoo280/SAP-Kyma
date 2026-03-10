@@ -2,6 +2,7 @@ FROM debian:12-slim AS downloader
 
 ARG EWP_VERSION=v1.13
 
+# hadolint ignore=DL3008
 RUN apt-get update && apt-get install -y --no-install-recommends ca-certificates curl \
     && curl -fsSL \
        https://github.com/justinwoo280/ech-workers/releases/download/${EWP_VERSION}/ewp-core-server-${EWP_VERSION}-linux-amd64 \
@@ -11,6 +12,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends ca-certificates
 
 FROM debian:12-slim
 
+# hadolint ignore=DL3008
 RUN apt-get update && apt-get install -y --no-install-recommends ca-certificates \
     && rm -rf /var/lib/apt/lists/* \
     && groupadd -g 65532 nonroot \
