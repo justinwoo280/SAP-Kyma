@@ -167,10 +167,9 @@ jobs:
             --docker-password="${GHCR_TOKEN}" \
             --dry-run=client -o yaml | kubectl apply -f -
 
-      - name: Apply TLS certificate
+      - name: Inject TLS secret into Gateway
         run: |
-          sed -i "s|ewp-tls|${{ steps.tls.outputs.secret_name }}|g" k8s/tls/03-certificate.yaml
-          kubectl apply -f k8s/tls/03-certificate.yaml
+          sed -i "s|ewp-tls|${{ steps.tls.outputs.secret_name }}|g" k8s/gateway/04-gateway.yaml
 
       - name: Deploy
         run: |
