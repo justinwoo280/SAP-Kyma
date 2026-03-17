@@ -8,12 +8,16 @@ spec:
   trafficPolicy:
     connectionPool:
       http:
-        http2MaxRequests: 1000
+        http2MaxRequests: 10000
         maxRequestsPerConnection: 0
         h2UpgradePolicy: UPGRADE
       tcp:
-        maxConnections: 100
-        connectTimeout: 5s
+        maxConnections: 1000
+        connectTimeout: 10s
+        tcpKeepalive:
+          time: 300s
+          interval: 30s
+          probes: 5
     tls:
       mode: ISTIO_MUTUAL
     loadBalancer:
@@ -29,4 +33,12 @@ spec:
       trafficPolicy:
         connectionPool:
           http:
+            http2MaxRequests: 10000
+            maxRequestsPerConnection: 0
             h2UpgradePolicy: UPGRADE
+          tcp:
+            maxConnections: 1000
+            tcpKeepalive:
+              time: 300s
+              interval: 30s
+              probes: 5
