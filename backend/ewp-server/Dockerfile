@@ -1,6 +1,6 @@
 FROM debian:12-slim AS downloader
 
-ARG EWP_VERSION=v1.13
+ARG EWP_VERSION=v1.13.1
 
 # hadolint ignore=DL3008
 RUN apt-get update && apt-get install -y --no-install-recommends ca-certificates curl \
