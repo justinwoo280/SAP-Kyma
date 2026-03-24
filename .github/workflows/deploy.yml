@@ -13,7 +13,7 @@ env:
   REGISTRY: ghcr.io
   IMAGE_NAME: ${{ github.repository_owner }}/ewp-kyma/ewp-server
   NAMESPACE: ewp
-  TEST_DOMAIN: c-8c4e4e1.kyma.ondemand.com
+  TEST_DOMAIN: e522b52.kyma.ondemand.com
 
 jobs:
   validate:
